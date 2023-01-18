@@ -3,10 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="src/styles.css">
 </head>
 <body>
+<form id="form">
+    <input type="file" name="file" id="file"><br>
+    <button type="submit">upload file</button>
+    <button onclick="scanFile();">Scan the file</button>
+</form>
 <div id="feed"></div>
+
+<script>
+    const feedDisplay = document.querySelector('#feed')
+    document.getElementById("form").addEventListener('submit',function (e){
+        e.preventDefault();
+        const file=document.getElementById('file').files[0];
+        const formData=new FormData();
+        formData.append('file',file);
+        fetch('http://localhost:3000/upload-avatar', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(res=>res.json())
+            .then(data=>console.log(data.resource))
+            .catch(err=>console.log(err));
+    })
+    function scanFile(){
+        fetch('http://localhost:3000/reports', {
+            method: 'GET',
+        })
+            .then(res=>res.json())
+            .then(data=>{
+                console.log(data);
+                const db = data.scans;
+                const keys = Object.keys(db)
+                keys.forEach((key,index) => {
+                    const title = `<h3> ${key} - ${db[key].detected} </h3>`
+                    feedDisplay.insertAdjacentHTML("beforeend", title)
+                })
+            })
+            .catch(err=>console.log(err));
+    }
+    /*document.getElementById("form").addEventListener('submit',function (e){
+        e.preventDefault();
+        fetch('http://localhost:3000/reports', {
+            method: 'POST',
+        })
+            .then(res=>res.json())
+            .then(data=>{
+                console.log(data);
+                const db = data.scans;
+                const keys = Object.keys(db)
+                keys.forEach((key,index) => {
+                    const title = `<h3> ${key} - ${db[key].detected} </h3>`
+                    feedDisplay.insertAdjacentHTML("beforeend", title)
+                })
+            })
+            .catch(err=>console.log(err));
+    })*/
+</script>
 </body>
-<script src="src/app.js"></script>
 </html>
