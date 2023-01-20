@@ -16,7 +16,17 @@
         <button id="scan" disabled onclick="scanFile();">Scan The File</button>
     </form>
 </div>
-<div id="feed"></div>
+<table class="container-fluid table table-hover">
+    <thead>
+        <tr>
+            <th>Database</th>
+            <th>Malicious Detected?</th>
+        </tr>
+    </thead>
+    <tbody id="feed">
+
+    </tbody>
+</table>
 
 <script>
     const btn = document.getElementById("scan");
@@ -46,10 +56,10 @@
                 keys.forEach((key,index) => {
                     if(db[key].detected===true){
                         const title = `<h3 class="red"> ${key} - ${db[key].detected} </h3>`
-                        feedDisplay.insertAdjacentHTML("beforeend", title)
+                        feedDisplay.insertAdjacentHTML("beforeend", `<tr class="table-danger"><td>${key}</td><td>${db[key].detected}</td></tr>`)
                     }else{
                         const title = `<h3 class="green"> ${key} - ${db[key].detected} </h3>`
-                        feedDisplay.insertAdjacentHTML("beforeend", title)
+                        feedDisplay.insertAdjacentHTML("beforeend", `<tr class="table-success"><td>${key}</td><td>${db[key].detected}</td></tr>`)
                     }
                 })
             })
